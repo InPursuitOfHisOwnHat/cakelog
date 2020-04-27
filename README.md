@@ -1,5 +1,7 @@
 # cakelog
-Small C logger used for testing, exercises and training examples
+Small C logger used for testing, exercises and training examples.
+
+Uses system calls only.
 
 # Instructions
 
