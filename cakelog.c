@@ -110,13 +110,14 @@ ssize_t cakelog(const char* msg_str, ...) {
     strcat(full_str, "\n");
 
     ssize_t bytes_written = write(_cakelog_fd, full_str, strlen(full_str));
-    fsync(_cakelog_fd);
-
     if (bytes_written == -1) {
         perror("initialise_cakelog(): error writing message to log file.");
         exit(EXIT_FAILURE);
     }
-
+    
+    // Flush
+    fsync(_cakelog_fd);
+    
     free(timestamp_str);
     free(full_str);
 
