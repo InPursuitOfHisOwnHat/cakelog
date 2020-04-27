@@ -29,7 +29,7 @@ int cakelog_initialise(const char *executable_name) {
     char *log_file_name;
     size_t log_file_name_len = strlen(executable_name) + 21;
 
-    // We only need this string for the duration of this method and it's not returned or passed anywhere, so allocate stack instead of heap
+    // Stick on stack - it's small and not returned or passed anywhere
     log_file_name = alloca(log_file_name_len);
 
     if (log_file_name == NULL) {
