@@ -7,7 +7,7 @@ Uses system calls only.
 
 1. Include:
 ```
-#include "cakelog.c"
+#include "cakelog.h"
 ```
 2. Initialise with:
 ```
