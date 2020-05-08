@@ -8,19 +8,23 @@
 #include <sys/stat.h>
 #include <stdarg.h>
 #include <alloca.h>
+#include <stdbool.h>
 
 #define TIME_STR_LEN 23
 #define STR_MAX_BUF_SIZE 256
 
 static int _cakelog_initialised = 0;
 static int _cakelog_fd;
+static bool _force_flush;
 
-int cakelog_initialise(const char *executable_name) {
+int cakelog_initialise(const char *executable_name, bool force_flush) {
 
     if ( _cakelog_initialised == 1) {
         printf("initialise_cakelog(): Attempt to initialise logging when it has already been initialised.\n");
         return -1;
     }
+
+    _force_flush = force_flush;
 
     // Create filename ([Executable]_[Date]_[Time].log);
     time_t _time = time(NULL);
@@ -116,7 +120,9 @@ ssize_t cakelog(const char* msg_str, ...) {
     }
     
     // Flush
-    fsync(_cakelog_fd);
+    if (_force_flush == true) {
+        fsync(_cakelog_fd);
+    }
     
     free(timestamp_str);
     free(full_str);
