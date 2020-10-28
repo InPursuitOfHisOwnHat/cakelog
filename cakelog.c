@@ -11,7 +11,10 @@
 #include <stdbool.h>
 
 #define TIME_STR_LEN 23
-#define STR_MAX_BUF_SIZE 256
+
+#ifndef CAKELOG_OUTPUT_STR_MAX_BUF_SIZE 
+    #define CAKELOG_OUTPUT_STR_MAX_BUF_SIZE 256
+#endif
 
 static int _cakelog_initialised = 0;
 static int _cakelog_fd;
@@ -28,7 +31,7 @@ int cakelog_initialise(const char *executable_name, bool force_flush) {
 
     // Create filename ([Executable]_[Date]_[Time].log);
     time_t _time = time(NULL);
-    struct tm *_tm = localtime(&_time);
+    struct tm *_tm = localtime(&_time); 
 
     char *log_file_name;
     size_t log_file_name_len = strlen(executable_name) + 21;
@@ -99,10 +102,10 @@ ssize_t cakelog(const char* msg_str, ...) {
         exit(EXIT_FAILURE);
     }
 
-    char formatted_msg_str[STR_MAX_BUF_SIZE];
+    char formatted_msg_str[CAKELOG_OUTPUT_STR_MAX_BUF_SIZE];
     va_list args;
     va_start(args, msg_str);
-    vsnprintf(formatted_msg_str, STR_MAX_BUF_SIZE, msg_str, args);
+    vsnprintf(formatted_msg_str, CAKELOG_OUTPUT_STR_MAX_BUF_SIZE, msg_str, args);
     va_end(args);
 
     char *timestamp_str = get_timestamp();
