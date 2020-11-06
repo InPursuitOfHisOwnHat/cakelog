@@ -15,8 +15,6 @@
     #define HATLOG_OUTPUT_STR_MAX_BUF_SIZE 256
 #endif
 
-/* Used to switch on debugging by the initialise method, off by default */
-static bool hatlog_debug_on = false;
 static int _hatlog_initialised = 0;
 static int _hatlog_fd;
 static bool _force_flush;
@@ -39,13 +37,8 @@ char * get_timestamp(void) {
 
 ssize_t hatlog(const char* msg_str, ...) {
 
-    if (!hatlog_debug_on) {
-        return 0;
-    }
-
     if ( _hatlog_initialised == 0) {
-        printf("hatlog()(): attempt to use logging without initialising it first.\n");
-        exit(EXIT_FAILURE);
+        return 0;
     }
 
     char formatted_msg_str[HATLOG_OUTPUT_STR_MAX_BUF_SIZE];
@@ -76,11 +69,6 @@ ssize_t hatlog(const char* msg_str, ...) {
 }
 
 int hatlog_initialise(const char *executable_name, bool force_flush) {
-
-    hatlog_debug_on = true;
-    if (!hatlog_debug_on) {
-        return 0;
-    }
 
     if ( _hatlog_initialised == 1) {
         printf("initialise_hatlog(): Attempt to initialise logging when it has already been initialised.\n");
@@ -126,7 +114,8 @@ int hatlog_initialise(const char *executable_name, bool force_flush) {
 
 int hatlog_stop() {
 
-    if (!hatlog_debug_on) {
+    if (_hatlog_initialised != 0 ) {
+        /* Nothing to do */
         return 0;
     }
 
