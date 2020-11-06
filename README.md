@@ -1,7 +1,9 @@
 # hatlog
 Small C logger used for testing, exercises and training examples.
 
-Uses system calls only.
+Uses Linux system calls only, so not very portable.
+
+Copy the header and source into your project so you always compile with the same version.
 
 # Instructions
 
