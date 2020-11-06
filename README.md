@@ -1,4 +1,4 @@
-# cakelog
+# hatlog
 Small C logger used for testing, exercises and training examples.
 
 Uses system calls only.
@@ -7,19 +7,21 @@ Uses system calls only.
 
 1. Include:
 ```
-#include "cakelog.h"
+#include "hatlog.h"
 ```
 2. Initialise with:
 ```
-cakelog_initialise("<name_of_program>");
+hatlog_initialise("<name_of_program>");
 ```
- 3. Output line to log file - similar to printf():
+If you do not call initialise, debug statements have no affect and no debug file is created
+
+3. Output line to log file - similar to printf():
 ```
-cakelog("<message>", vargs);
+hatlog("<message>", vargs);
 ```
 4. Stop with:
 ```
-cakelog_stop();
+hatlog_stop();
 ```
 
 # Example Output:
