@@ -1,4 +1,4 @@
-# hatlog
+# cakelog
 Small C logger used for testing, exercises and training examples.
 
 Uses Linux system calls only, so not very portable.
@@ -9,22 +9,26 @@ Copy the header and source into your project so you always compile with the same
 
 1. Include:
 ```
-#include "hatlog.h"
+#include "cakelog.h"
 ```
 2. Initialise with:
 ```
-hatlog_initialise("<name_of_program>");
+cakelog_initialise("<name_of_program>");
 ```
 If you do not call initialise, debug statements have no affect and no debug file is created
 
 3. Output line to log file - similar to printf():
 ```
-hatlog("<message>", vargs);
+cakelog("<message>", vargs);
 ```
 4. Stop with:
 ```
-hatlog_stop();
+cakelog_stop();
 ```
+
+## Compiler Options
+
+`-DCAKELOG_OUTPUT_STR_MAX_BUF_SIZE [n]` set the maximum length of logging string in chars (default is 256)
 
 # Example Output:
 
