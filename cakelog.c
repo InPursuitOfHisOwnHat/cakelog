@@ -1,15 +1,3 @@
-#include <unistd.h>
-#include <stdlib.h>
-#include <time.h>
-#include <sys/time.h>
-#include <stdio.h>
-#include <string.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <stdarg.h>
-#include <alloca.h>
-#include <stdbool.h>
-#include <math.h>
 #include "cakelog.h"
 
 #define TIMESTAMP_STR_LEN 27
@@ -25,9 +13,12 @@ static bool _force_flush;
 char * get_timestamp(void) {
 
     struct timeval tv;
+
     gettimeofday(&tv, NULL);
 
-    /* to nearest ms */
+    struct tm *_tm = localtime(&tv);
+
+    /* ms */
     int ms = lrint(tv.tv_usec / 1000.0); 
 
     /* to nearest second */
@@ -36,8 +27,6 @@ char * get_timestamp(void) {
         tv.tv_sec++;
     }
 
-    time_t _time = time(NULL);
-    struct tm *_tm = localtime(&_time);
     char *timestamp_str = malloc(TIMESTAMP_STR_LEN);
 
     if (timestamp_str == NULL) {
