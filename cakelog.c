@@ -76,6 +76,8 @@ ssize_t cakelog(const char* msg_str, ...) {
     if (_force_flush == true) {
         fsync(_cakelog_fd);
     }
+    
+    return bytes_written;
 
 }
 
