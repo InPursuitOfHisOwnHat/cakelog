@@ -63,7 +63,11 @@ e.g.
 
 ### Compiler Options
 
-The default maximum length of a debug string is 1024-bytes (1kb). This is set in the macro:
+The default maximum length of a debug string is 1024-bytes (1kb). Lines longer than this will be truncated.
+
+The value can be changed at compile time, but, as mentioned before, the log lines are allocated on the stack, so you may run into problems if you put too large a value.
+
+This is set in the macro:
 
     #define CAKELOG_OUTPUT_STR_MAX_BUF_SIZE 1024
 
@@ -71,7 +75,7 @@ This macro value can be adjusted at compile time using the -D switch.
 
     gcc -o myprogram myprogram.c cakelog.c -DCAKELOG_OUTPUT_STR_MAX_BUF_SIZE=500
 
-If lines are too long they are truncated.
+
 
 ## API
 
