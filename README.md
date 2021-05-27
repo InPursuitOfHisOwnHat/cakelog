@@ -1,5 +1,7 @@
 # Cakelog
 
+---
+
 - [Introduction](#introduction)
 - [Build Instructions](#build-instructions)
   - [Compiler Options](#compiler-options)
@@ -7,6 +9,8 @@
   - [`int cakelog_initialise(const char *executable_name, bool force_flush)`](#int-cakelog_initialiseconst-char-executable_name-bool-force_flush)
   - [`ssize_t cakelog(const char* msg_str, ...)`](#ssize_t-cakelogconst-char-msg_str-)
   - [`int cakelog_stop()`](#int-cakelog_stop)
+
+---
 
 ## Introduction
 
