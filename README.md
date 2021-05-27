@@ -77,7 +77,7 @@ If lines are too long they are truncated.
 
 ### `int cakelog_initialise(const char *executable_name, bool force_flush)`
 
-Must be called first or any calls to the `cakelog()` function will have no affect. 
+Must be called first or any calls to the `cakelog()` function will have no effect (allows you to conditionally decide whether a program should log or not which will slightly improve performance). 
 
 The `force_flush` option will decide whether log lines are flushed to the log file as soon as they're written.
 
@@ -93,7 +93,7 @@ Writes a line to the log file.
 
 `msg_str` is the message to be written. It can contain standard `C` format specifiers.
 
-The message is automatically prefixed with a timestamp that takes the format:
+The message is automatically prefixed with a timestamp followed by a tab (`\t`). The timestamp takes the format:
 
     [YYYY-MM-DD HH:MM:SS.MSS]
 
