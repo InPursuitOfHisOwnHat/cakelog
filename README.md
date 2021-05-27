@@ -1,44 +1,110 @@
-# cakelog
-Small C logger used for testing, exercises and training examples.
+# Cakelog
 
-Uses Linux system calls only, so not very portable.
+- [Introduction](#introduction)
+- [Build Instructions](#build-instructions)
+  - [Compiler Options](#compiler-options)
+- [API](#api)
+  - [`int cakelog_initialise(const char *executable_name, bool force_flush)`](#int-cakelog_initialiseconst-char-executable_name-bool-force_flush)
+  - [`ssize_t cakelog(const char* msg_str, ...)`](#ssize_t-cakelogconst-char-msg_str-)
+  - [`int cakelog_stop()`](#int-cakelog_stop)
 
-Copy the header and source into your project so you always compile with the same version.
+## Introduction
 
-# Instructions
+Cakelog is a simple light-weight logging module that can be used to generate simple timestamped log files for C/C++ programs.
 
-1. Include:
+An example of its output is below:
+
+```
+[2021-05-27 20:59:10.083]	---------------------------------------------------------
+[2021-05-27 20:59:10.084]	| Succesfully Initialised CakeLog with File Descriptor 3 |
+[2021-05-27 20:59:10.084]	---------------------------------------------------------
+[2021-05-27 20:59:10.084]	O, what men dare do! What men may do! What men daily do, not knowing what they do!
+[2021-05-27 20:59:10.084]	(sleeping for 2 seconds)
+[2021-05-27 20:59:12.084]	There are very few moments in a man's existence when he experiences so much ludicrous distress, or meets with so little charitable commiseration, as when he is in pursuit of his own hat.
+[2021-05-27 20:59:12.084]	--------------------
+[2021-05-27 20:59:12.084]	| Stopping CakeLog |
+[2021-05-27 20:59:12.084]	--------------------
+
+```
+The source which generated the above output is below - it is provided in this repo as `cakelog-test.c`.
+
 ```
 #include "cakelog.h"
-```
-2. Initialise with:
-```
-cakelog_initialise("<name_of_program>");
-```
-If you do not call initialise, debug statements have no affect and no debug file is created
+#include <unistd.h>
+#include <stdio.h>
 
-3. Output line to log file - similar to printf():
-```
-cakelog("<message>", vargs);
-```
-4. Stop with:
-```
-cakelog_stop();
+int main(int argc, char** argv) {
+
+    cakelog_initialise(argv[0], false);
+
+    cakelog("O, what men dare do! What men may do! What men daily do, not knowing what they do!");
+    cakelog("(sleeping for 2 seconds)");
+    sleep(2);
+    cakelog("There are very few moments in a man's existence when he experiences so much ludicrous distress, or meets with so little charitable commiseration, as when he is in pursuit of his own hat.");
+
+    cakelog_stop();
+
+}
 ```
 
-## Compiler Options
+Log files are created in the same directory as the executable and named with the pattern:
 
-`-DCAKELOG_OUTPUT_STR_MAX_BUF_SIZE [n]` set the maximum length of logging string in chars (default is 256)
+    [NAME]_YYMMDD_HHMMSS.log
 
-# Example Output:
+Where `[NAME]` is a `char*` passed to the `cakelog_initialise()` function.
 
-```
-[2020-04-27 16:40:20]	===================================================
-[2020-04-27 16:40:20]	Succesfully Initialised Log with File Descriptor 3
-[2020-04-27 16:40:20]	===================================================
-[2020-04-27 16:40:20]	This is a test log message.
-[2020-04-27 16:40:20]	This is another one.
-[2020-04-27 16:40:20]	============
-[2020-04-27 16:40:20]	Stopping log
-[2020-04-27 16:40:20]	============
-```
+## Build Instructions
+
+To use Cakelog in a program, simply add an include directive for its header file (`cakelog.h`) and ensure the `cakelog.c` module is compiled along with your program.
+
+e.g.
+
+    gcc myprogram.c cakelog.c
+
+### Compiler Options
+
+The default maximum length of a debug string is 1024-bytes (1kb). This is set in the macro:
+
+    #define CAKELOG_OUTPUT_STR_MAX_BUF_SIZE 1024
+
+This macro value can be adjusted at compile time using the -D switch.
+
+    gcc -o myprogram myprogram.c cakelog.c -DCAKELOG_OUTPUT_STR_MAX_BUF_SIZE=500
+
+If lines are too long they are truncated.
+
+## API
+
+### `int cakelog_initialise(const char *executable_name, bool force_flush)`
+
+Must be called first or any calls to the `cakelog()` function will have no affect. 
+
+The `force_flush` option will decide whether log lines are flushed to the log file as soon as they're written.
+
+Creates the log file in the current directory (the same one as the executable). The log file is given a name of the format:
+
+        [NAME]_YYMMDD_HHMMSS.log
+
+Returns 0 on success and any other number on failure.
+
+### `ssize_t cakelog(const char* msg_str, ...)`
+
+Writes a line to the log file.
+
+`msg_str` is the message to be written. It can contain standard `C` format specifiers.
+
+The message is automatically prefixed with a timestamp that takes the format:
+
+    [YYYY-MM-DD HH:MM:SS.MSS]
+
+The return value is the number of bytes written.
+
+Note that before being written to the log file, logging strings are allocated on the stack in this function, not on the heap.
+
+### `int cakelog_stop()`
+
+Uninitialise Cakelog and close the log file descriptor.
+
+Returns 0 on success and any other number on failure.
+
+
